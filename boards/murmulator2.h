@@ -40,6 +40,9 @@
 // Sound
 #if defined(AUDIO_PWM)
 #define AUDIO_PWM_PIN 9
+/// TODO: fix it
+#define AUDIO_DATA_PIN 9
+#define AUDIO_CLOCK_PIN 10
 #else
 #define AUDIO_DATA_PIN 9
 #define AUDIO_CLOCK_PIN 10

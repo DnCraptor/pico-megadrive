@@ -1,6 +1,25 @@
+# == DO NOT EDIT THE FOLLOWING LINES for the Raspberry Pi Pico VS Code Extension to work ==
+if(WIN32)
+    set(USERHOME $ENV{USERPROFILE})
+else()
+    set(USERHOME $ENV{HOME})
+endif()
+set(sdkVersion 2.1.1)
+set(toolchainVersion 14_2_Rel1)
+set(picotoolVersion 2.1.1)
+set(picoVscode ${USERHOME}/.pico-sdk/cmake/pico-vscode.cmake)
+if (EXISTS ${picoVscode})
+    include(${picoVscode})
+endif()
+# ====================================================================================
 cmake_minimum_required(VERSION 3.13)
 set(PICO_BOARD_HEADER_DIRS ${CMAKE_CURRENT_LIST_DIR}/boards )
+#set(PICO_PLATFORM "rp2040" CACHE STRING "Chip type")
+set(PICO_PLATFORM "rp2350" CACHE STRING "Chip type")
 set(PICO_BOARD "murmulator" CACHE STRING "Board type")
+#set(PICO_BOARD "murmulator2" CACHE STRING "Board type")
+#set(PICO_BOARD "rp2040pizero" CACHE STRING "Board type")
+
 include(pico_sdk_import.cmake)
 
 project(genesis C CXX ASM)
@@ -58,8 +77,8 @@ target_compile_definitions(slower_boot2 PRIVATE PICO_FLASH_SPI_CLKDIV=4)
 pico_set_boot_stage2(${PROJECT_NAME} slower_boot2)
 
 
-set(FAMILY rp2040)
-set(BOARD pico_sdk)
+#set(FAMILY rp2040)
+#set(BOARD pico_sdk)
 
 pico_set_program_name(genesis "Sega MegaDrive by xrip for MURMULATOR devboard")
 pico_set_program_version(genesis "develop")

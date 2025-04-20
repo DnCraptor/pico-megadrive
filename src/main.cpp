@@ -406,22 +406,23 @@ bool filebrowser_loadfile(const char pathname[256]) {
     FILINFO fileinfo;
     f_stat(pathname, &fileinfo);
 
-    if (16384 - 64 << 10 < fileinfo.fsize) {
+    if (((16384ul - 64) << 10) < fileinfo.fsize) {
         draw_text("ERROR: ROM too large! Canceled!!", window_x + 1, window_y + 2, 13, 1);
         sleep_ms(5000);
         return false;
     }
 
-
+    gpio_put(PICO_DEFAULT_LED_PIN, true);
     draw_text("Loading...", window_x + 1, window_y + 2, 10, 1);
     sleep_ms(500);
-
 
     multicore_lockout_start_blocking();
     auto flash_target_offset = FLASH_TARGET_OFFSET;
     const uint32_t ints = save_and_disable_interrupts();
-    flash_range_erase(flash_target_offset, fileinfo.fsize);
+    size_t sz = fileinfo.fsize & 0xFFFFFFFF;
+    flash_range_erase(flash_target_offset, sz);
     restore_interrupts(ints);
+    gpio_put(PICO_DEFAULT_LED_PIN, false);
 
     if (FR_OK == f_open(&file, pathname, FA_READ)) {
         uint8_t buffer[FLASH_PAGE_SIZE];
@@ -450,6 +451,7 @@ bool filebrowser_loadfile(const char pathname[256]) {
         gpio_put(PICO_DEFAULT_LED_PIN, true);
     }
     f_close(&file);
+    gpio_put(PICO_DEFAULT_LED_PIN, false);
     multicore_lockout_end_blocking();
     // restore_interrupts(ints);
     return true;
@@ -469,6 +471,7 @@ void filebrowser(const char pathname[256], const char executables[11]) {
         draw_text("SD Card not inserted or SD Card error!", 0, 0, 12, 0);
         while (true);
     }
+    f_mkdir(HOME_DIR);
 
     while (true) {
         memset(fileItems, 0, sizeof(file_item_t) * max_files);
