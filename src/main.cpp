@@ -33,10 +33,11 @@ extern "C" {
 
 
 #define HOME_DIR "\\SEGA"
-extern char __flash_binary_end;
-#define FLASH_TARGET_OFFSET (((((uintptr_t)&__flash_binary_end - XIP_BASE) / FLASH_SECTOR_SIZE) + 4) * FLASH_SECTOR_SIZE)
+///extern char __flash_binary_end;
+#define FLASH_TARGET_OFFSET (1ul << 20)
+///(((((uintptr_t)&__flash_binary_end - XIP_BASE) / FLASH_SECTOR_SIZE) + 4) * FLASH_SECTOR_SIZE)
 static const uintptr_t rom = XIP_BASE + FLASH_TARGET_OFFSET;
-char __uninitialized_ram(filename[256]);
+///char __uninitialized_ram(filename[256]);
 
 static FATFS fs;
 i2s_config_t i2s_config;
@@ -203,7 +204,7 @@ typedef struct __attribute__((__packed__)) {
 } MenuItem;
 
 int save_slot = 0;
-const uint16_t frequencies[] = {378, 396, 404, 408, 412, 416, 420, 424, 432};
+const uint16_t frequencies[] = {366, 378, 396, 404, 408, 412, 416, 420, 424, 432};
 uint8_t frequency_index = 0;
 
 bool overclock() {
@@ -243,7 +244,7 @@ const MenuItem menu_items[] = {
     {"Sampling div: %s ", ARRAY, &GWENESIS_AUDIO_SAMPLING_DIVISOR, nullptr, 0, 10, {"!", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"}},
     {
         "Overclocking: %s MHz", ARRAY, &frequency_index, &overclock, 0, count_of(frequencies) - 1,
-        {"378", "396", "404", "408", "412", "416", "420", "424", "432"}
+        {"366", "378", "396", "404", "408", "412", "416", "420", "424", "432"}
     },
     // {},
     // { "Save state: %i", INT, &save_slot, &save, 5 },

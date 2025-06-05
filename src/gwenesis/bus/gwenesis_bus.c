@@ -38,7 +38,7 @@ __license__ = "GPLv3"
 
 #define BUS_DISABLE_LOGGING 1
 
-uint8_t GWENESIS_AUDIO_SAMPLING_DIVISOR = 6;
+uint8_t GWENESIS_AUDIO_SAMPLING_DIVISOR = 1;
 
 #if !BUS_DISABLE_LOGGING
 #include <stdarg.h>
